@@ -46,7 +46,7 @@ export const authenticatedFetch = async (url, options = {}) => {
  * @returns {boolean} - True if authenticated
  */
 export const isAuthenticated = () => {
-  const token = localStorage.getItem('access');
+  const token = localStorage.getItem('userId');
   return !!token;
 };
 
