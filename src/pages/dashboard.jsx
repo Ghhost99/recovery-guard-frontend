@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // Import Link for navigation
 import Sidebar from "../components/SideBar";
 import { Bell, UserCircle } from "lucide-react";
 import Navbar from "../components/navbar";
@@ -28,7 +28,6 @@ const Dashboard = () => {
         console.log("Dashboard resData:", resData); // Log for structure check
 
         if (resData?.stats && resData?.progress && resData?.activity) {
-          
           setData(resData); // ✅ This line was missing
         } else {
           console.error("Invalid response structure", resData);
@@ -64,11 +63,11 @@ const Dashboard = () => {
             <div className="flex items-center space-x-6">
               <div className="text-xl font-bold">RecoveryGuard</div>
               <nav className="hidden md:flex space-x-4 text-sm">
-                <button className="hover:text-blue-400" onClick={() => navigate('/')}>Home</button>
-                <button className="hover:text-blue-400" onClick={() => navigate('/start-recovery')}>Submit Case</button>
-                <button className="hover:text-blue-400">My Cases</button>
-                <button className="hover:text-blue-400">Support</button>
-                <button className="hover:text-blue-400">FAQ</button>
+                <Link to="/" className="hover:text-blue-400">Home</Link>
+                <Link to="/start-recovery" className="hover:text-blue-400">Submit Case</Link>
+                <Link to="/my-cases" className="hover:text-blue-400">My Cases</Link>
+                <Link to="/support" className="hover:text-blue-400">Support</Link>
+                <Link to="/faq" className="hover:text-blue-400">FAQ</Link>
               </nav>
             </div>
             <div className="flex items-center space-x-6">
@@ -84,13 +83,14 @@ const Dashboard = () => {
           <main className="p-6 space-y-6 overflow-y-auto">
             <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {data.stats.map((stat, i) => (
-                <div
+                <Link
                   key={i}
+                  to={`/${stat.label}`}  // Link for each stat
                   className="p-4 bg-black/30 rounded-xl border border-white/20 shadow-md backdrop-blur-lg hover:scale-[1.02] transition"
                 >
                   <p className="text-sm text-gray-300">{stat.label}</p>
                   <h3 className="text-2xl font-bold mt-1">{stat.value}</h3>
-                </div>
+                </Link>
               ))}
             </section>
 
@@ -127,10 +127,10 @@ const Dashboard = () => {
 
             <section className="bg-black/30 rounded-xl p-6 border border-white/20 shadow backdrop-blur-lg">
               <h2 className="text-xl font-semibold mb-4">Upload Documents</h2>
-              <div className="border-2 border-dashed border-gray-500 p-10 rounded-lg text-center hover:border-blue-400 transition cursor-pointer">
+              <Link to="/upload" className="border-2 border-dashed border-gray-500 p-10 rounded-lg text-center hover:border-blue-400 transition cursor-pointer">
                 <p className="mb-2">Drag & Drop files here</p>
                 <p className="text-sm text-gray-400">Allowed formats: PDF, JPG, PNG</p>
-              </div>
+              </Link>
             </section>
           </main>
         </div>
