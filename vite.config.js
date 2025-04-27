@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(),"@tailwindcss/postcss"],
   resolve: {
     alias: {
       '@components': '/src/components',
@@ -23,3 +23,7 @@ export default defineConfig({
   },
   assetsInclude: ['**/*.gif', '**/*.GIF'],
 });
+scripts{
+  npx @tailwindcss/cli -i ./src/Index.css -o ./src/output.css --watch
+
+}

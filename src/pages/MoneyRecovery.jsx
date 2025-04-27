@@ -22,7 +22,7 @@ function MoneyRecoveryForm() {
     const { name, value, files } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: files ? files : value,
+      [name]: files && files.length > 0 ? files : value,
     }));
   };
 
@@ -42,6 +42,11 @@ function MoneyRecoveryForm() {
         data.append(key, value);
       }
     });
+    for (let [key, value] of data.entries()) {
+      console.log(`${key}:`, value);
+    }
+    
+    return;
 
     try {
       const response = await fetch('/api/money-recovery', {

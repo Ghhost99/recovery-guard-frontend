@@ -49,7 +49,8 @@ function CryptoLossReport() {
           submission.append(key, value);
         }
       });
-
+       console.log('form',submission);
+          return;
       const res = await fetch("https://your-api.com/api/crypto-loss-report", {
         method: "POST",
         body: submission,

@@ -34,6 +34,8 @@ function SocialMediaRecoveryPage() {
       Object.entries(formData).forEach(([key, value]) => {
         if (value) data.append(key, value);
       });
+       console.log('form:',data);
+       return;
 
       const res = await fetch("/api/recover/social", {
         method: "POST",
