@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import Navbar from '@components/navbar';
+import API_BASE_URL from '../utils/Setup';
+import  {authenticatedFetch}  from '../utils/auth';
 
 function MoneyRecoveryForm() {
   const [formData, setFormData] = useState({
@@ -46,10 +48,10 @@ function MoneyRecoveryForm() {
       console.log(`${key}:`, value);
     }
     
-    return;
+   
 
     try {
-      const response = await fetch('/api/money-recovery', {
+      const response = await authenticatedFetch(`${API_BASE_URL}/cases/money-recovery/`, {
         method: 'POST',
         body: data,
       });
@@ -73,8 +75,8 @@ function MoneyRecoveryForm() {
             {/* User Information */}
             {/* firstName, lastName, phone, email */}
             {[ 
-              { id: "firstName", label: "First Name", type: "text" },
-              { id: "lastName", label: "Last Name", type: "text" },
+              { id: "first_name", label: "First Name", type: "text" },
+              { id: "last_name", label: "Last Name", type: "text" },
               { id: "phone", label: "Phone Number", type: "tel" },
               { id: "email", label: "Email Address", type: "email" },
             ].map(({ id, label, type }) => (
@@ -95,7 +97,7 @@ function MoneyRecoveryForm() {
             {/* Identity & Banking Details */}
             {/* id, amount, refNumber, bank, iban */}
             {[
-              { id: "id", label: "Identification (DNI/NIE/Passport)", type: "text" },
+              { id: "identification", label: "Identification (DNI/NIE/Passport)", type: "text" },
               { id: "amount", label: "Amount Lost", type: "number" },
               { id: "refNumber", label: "Reference Number / Transaction ID", type: "text" },
               { id: "bank", label: "Bank / Payment Platform", type: "text" },
@@ -148,7 +150,7 @@ function MoneyRecoveryForm() {
               <label htmlFor="files" className="block mb-1 font-medium">Proof of Fraud (Screenshots/Documents)</label>
               <input
                 id="files"
-                name="files"
+                name="supporting_docu"
                 type="file"
                 multiple
                 accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"

@@ -7,14 +7,13 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    'watch:css':'npx @tailwindcss/cli -i ./src/index.css -o ./src/output.css --watch
-    '
+    "preview": "vite preview"
   },
   "dependencies": {
     "@dotlottie/player-component": "^2.7.12",
     "@tailwindcss/cli": "^4.1.4",
     "@tailwindcss/postcss": "^4.1.4",
+    "@tailwindcss/vite": "^4.1.4",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.483.0",
     "postcss": "^8.5.3",

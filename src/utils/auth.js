@@ -8,6 +8,7 @@
  */
 export const authenticatedFetch = async (url, options = {}) => {
   const token = localStorage.getItem('access');
+  const userId = localStorage.getItem('userId');
   
   if (!token) {
     throw new Error('No authentication token found');
@@ -16,7 +17,7 @@ export const authenticatedFetch = async (url, options = {}) => {
   const headers = {
     ...options.headers,
     'Authorization': `Bearer ${token}`
-  };
+      };
   
   // Don't set Content-Type for FormData
   if (!(options.body instanceof FormData)) {
