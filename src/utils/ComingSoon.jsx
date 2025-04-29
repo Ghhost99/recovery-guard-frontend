@@ -1,6 +1,6 @@
 import React from 'react';
 import Socials from './Socials';
-import { ClockIcon } from '@heroicons/react/solid'; // You can import any icon from Heroicons or Font Awesome
+import { Clock as ClockIcon } from '@heroicons/react/24/solid';
 
 const ComingSoon = () => {
     return (
