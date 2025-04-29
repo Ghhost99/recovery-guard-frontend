@@ -3,12 +3,16 @@ import React, { useEffect, useState } from "react";
 import { authenticatedFetch } from "../utils/auth";
 import API_BASE_URL from "../utils/Setup";
 import { formatDistanceToNow } from "date-fns";
-
+import {redirectIfIncomplete} from "../utils/navigation"
 const MessageList = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-
+  useEffect((
+    
+  )=>{
+    redirectIfIncomplete('/coming-soon',true)
+  },[])
   useEffect(() => {
     let isMounted = true;
 

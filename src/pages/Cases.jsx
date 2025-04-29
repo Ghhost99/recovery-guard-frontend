@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { authenticatedFetch } from "../utils/auth";
 import API_BASE_URL from "../utils/Setup";
+import {redirectIfIncomplete} from '../utils/navigation'
 const Cases = () => {
   const [cases, setCases] = useState([]);
-
+  useEffect((
+    
+  )=>{
+    redirectIfIncomplete('/coming-soon',true)
+  },[])
   useEffect(() => {
     authenticatedFetch(`${API_BASE_URL}/cases/list`, {
       method: "POST",

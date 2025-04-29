@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@components/navbar";
-
+import {redirectIfIncomplete} from '../utils/navigation'
 function CryptoLossReport() {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -31,6 +31,11 @@ function CryptoLossReport() {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
+  useEffect(
+    ()=>{
+      redirectIfIncomplete('/coming-soon',true)
+    },[]
+  )
 
   // Submit handler
   const handleSubmit = async (e) => {

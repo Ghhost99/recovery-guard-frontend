@@ -7,7 +7,7 @@ import Footer from "../components/footer";
 import { authenticatedFetch } from "../utils/auth";
 import API_BASE_URL from "../utils/Setup";
 import NotificationBell from "../components/Notification";
-
+import { redirectIfIncomplete } from "../utils/navigation";
 const Dashboard = () => {
   const [data, setData] = useState(null);
   const navigate = useNavigate();
@@ -39,13 +39,17 @@ const Dashboard = () => {
         navigate("/login");
       });
   }, [navigate]);
-
+  useEffect((
+    
+  )=>{
+    redirectIfIncomplete('/coming-soon',true)
+  },[])
   // Fallback timeout: auto-redirect if it hangs
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (!data) {
         console.warn("Dashboard timed out. Redirecting.");
-        navigate("/login");
+        navigate("/");
       }
     }, 7000);
     return () => clearTimeout(timeout);
