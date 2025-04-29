@@ -17,14 +17,16 @@ import Cases from "./pages/Cases";
 import MessageList from "./pages/MessageList"; // optional
 import MessageDashboard from "./components/MessageDashboard"; // optional
 import MessageContainer from "./components/MessageContainer"; // optional
+import Socials from "./utils/Socials"; 
+import ComingSoon from "./utils/ComingSoon"
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/start-recovery" element={<RecoveryOptions />} /> {/* ✅ add route */}
       <Route path="/submit-case" element={<RecoveryOptions />} /> {/* ✅ add route */}
-
-      <Route path="/socials" element={<SocialMediaRecoveryPage />} />
+      <Route path="/coming-soon" element={<ComingSoon/>}/>
+      <Route path="/socials" element={<Socials />} />
       <Route path="/money-recovery" element={<MoneyRecoveryForm />} />
       <Route path="/crypto-recovery" element={<CryptoLossReport />} />
       <Route path="/articles" element={<ArticlesPage />} />

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@components/navbar";
+import { redirectIfIncomplete } from "../utils/navigation";
 
 function SocialMediaRecoveryPage() {
   const [formData, setFormData] = useState({
@@ -14,7 +15,11 @@ function SocialMediaRecoveryPage() {
 
   const [submitting, setSubmitting] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
-
+  useEffect((
+    
+  )=>{
+    redirectIfIncomplete('/coming-soon',true)
+  },[])
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "profilePic") {

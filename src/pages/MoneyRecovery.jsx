@@ -1,22 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '@components/navbar';
 import API_BASE_URL from '../utils/Setup';
-import  {authenticatedFetch}  from '../utils/auth';
+import { authenticatedFetch } from '../utils/auth';
+import { redirectIfIncomplete } from '../utils/navigation';
 
 function MoneyRecoveryForm() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     phone: '',
     email: '',
-    id: '',
+    identification: '',
     amount: '',
-    refNumber: '',
+    reference_number: '',
     bank: '',
     iban: '',
     datetime: '',
     description: '',
-    files: []
+    supporting_docu: []
   });
 
   // Handle field changes
@@ -36,19 +37,14 @@ function MoneyRecoveryForm() {
 
     // Append all fields to FormData for file support
     Object.entries(formData).forEach(([key, value]) => {
-      if (key === 'files' && value.length) {
+      if (key === 'supporting_docu' && value.length) {
         for (let i = 0; i < value.length; i++) {
-          data.append('files', value[i]);
+          data.append('supporting_docu', value[i]);
         }
       } else {
         data.append(key, value);
       }
     });
-    for (let [key, value] of data.entries()) {
-      console.log(`${key}:`, value);
-    }
-    
-   
 
     try {
       const response = await authenticatedFetch(`${API_BASE_URL}/cases/money-recovery/`, {
@@ -64,6 +60,10 @@ function MoneyRecoveryForm() {
     }
   };
 
+  useEffect(() => {
+    redirectIfIncomplete('/coming-soon', true);
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -73,7 +73,6 @@ function MoneyRecoveryForm() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* User Information */}
-            {/* firstName, lastName, phone, email */}
             {[ 
               { id: "first_name", label: "First Name", type: "text" },
               { id: "last_name", label: "Last Name", type: "text" },
@@ -95,11 +94,10 @@ function MoneyRecoveryForm() {
             ))}
 
             {/* Identity & Banking Details */}
-            {/* id, amount, refNumber, bank, iban */}
-            {[
+            {[ 
               { id: "identification", label: "Identification (DNI/NIE/Passport)", type: "text" },
               { id: "amount", label: "Amount Lost", type: "number" },
-              { id: "refNumber", label: "Reference Number / Transaction ID", type: "text" },
+              { id: "reference_number", label: "Reference Number / Transaction ID", type: "text" },
               { id: "bank", label: "Bank / Payment Platform", type: "text" },
               { id: "iban", label: "Bank Account / IBAN", type: "text" },
             ].map(({ id, label, type }) => (
@@ -109,7 +107,7 @@ function MoneyRecoveryForm() {
                   id={id}
                   name={id}
                   type={type}
-                  required={id !== 'refNumber'}
+                  required={id !== 'reference_number'}
                   value={formData[id]}
                   onChange={handleChange}
                   className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl"
@@ -147,9 +145,9 @@ function MoneyRecoveryForm() {
 
             {/* File Upload */}
             <div>
-              <label htmlFor="files" className="block mb-1 font-medium">Proof of Fraud (Screenshots/Documents)</label>
+              <label htmlFor="supporting_docu" className="block mb-1 font-medium">Proof of Fraud (Screenshots/Documents)</label>
               <input
-                id="files"
+                id="supporting_docu"
                 name="supporting_docu"
                 type="file"
                 multiple
@@ -174,20 +172,3 @@ function MoneyRecoveryForm() {
 }
 
 export default MoneyRecoveryForm;
-
-
-// 📋 Field Documentation (In Code):
-// Field ID	Description
-// firstName	User’s first name
-// lastName	User’s last name
-// phone	Contact phone number
-// email	Contact email address
-// id	Government-issued ID (DNI/NIE/Passport)
-// amount	Amount of money lost
-// refNumber	Transaction reference (optional)
-// bank	Bank or payment platform used
-// iban	Account number/IBAN
-// datetime	Date and time of the fraudulent action
-// description	Detailed description of what occurred
-// files	Uploaded evidence (screenshots/docs)
-// Let me know if you’d like the API route created too (/api/money-recovery with Next.js or Express, for example).
