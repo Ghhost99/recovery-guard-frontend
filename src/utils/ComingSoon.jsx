@@ -1,24 +1,42 @@
 import React from 'react';
-import { Clock, Facebook, Twitter, Instagram, Linkedin, Github } from 'lucide-react';
+import { Instagram, Send, Twitter, Clock } from 'lucide-react';
+
+const socialLinks = [
+  {
+    name: 'Instagram',
+    url: 'https://www.instagram.com/ayudacibernetica1?igsh=dzYzcXExOTMza2Vq',
+    icon: <Instagram size={20} />,
+    hoverColor: 'hover:text-pink-500'
+  },
+  {
+    name: 'Telegram',
+    url: 'https://t.me/recuperacionsegura',
+    icon: <Send size={20} />,
+    hoverColor: 'hover:text-blue-300'
+  },
+  {
+    name: 'Twitter (X)',
+    url: 'https://x.com/1Ciberseguridad?t=48PlVMhZ1BJDLTVEYIlVvw&s=09',
+    icon: <Twitter size={20} />,
+    hoverColor: 'hover:text-blue-400'
+  }
+];
 
 const Socials = () => {
   return (
-    <div className="flex items-center justify-center gap-4 mt-6">
-      <a href="#" className="text-white hover:text-blue-400 transition-colors">
-        <Facebook size={20} />
-      </a>
-      <a href="#" className="text-white hover:text-blue-400 transition-colors">
-        <Twitter size={20} />
-      </a>
-      <a href="#" className="text-white hover:text-blue-400 transition-colors">
-        <Instagram size={20} />
-      </a>
-      <a href="#" className="text-white hover:text-blue-400 transition-colors">
-        <Linkedin size={20} />
-      </a>
-      <a href="#" className="text-white hover:text-blue-400 transition-colors">
-        <Github size={20} />
-      </a>
+    <div className="flex items-center justify-center gap-4 mt-4">
+      {socialLinks.map(({ name, url, icon, hoverColor }) => (
+        <a
+          key={name}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`text-white ${hoverColor} transition-colors`}
+          aria-label={name}
+        >
+          {icon}
+        </a>
+      ))}
     </div>
   );
 };
@@ -33,12 +51,11 @@ const ComingSoon = () => {
         <h1 className="text-4xl font-bold text-white mb-4">Coming Soon</h1>
         <p className="mt-4 text-lg text-gray-300">We are working hard to bring you this feature.</p>
         <p className="mt-2 text-lg text-gray-300">Stay tuned!</p>
-        
-        {/* Video or image placeholder */}
+
         <div className="my-6 bg-black w-full h-48 rounded-md flex items-center justify-center">
           <img src="/api/placeholder/320/180" alt="Coming soon feature preview" />
         </div>
-        
+
         <div className="mt-8">
           <a
             href="/"
@@ -47,7 +64,7 @@ const ComingSoon = () => {
             Go Back Home
           </a>
         </div>
-        
+
         <div className="mt-6 p-4 bg-gray-900 rounded-lg">
           <h3 className="text-xl font-semibold text-white mb-2">Connect With Us</h3>
           <Socials />

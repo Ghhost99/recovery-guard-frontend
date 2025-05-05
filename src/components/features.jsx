@@ -31,7 +31,7 @@ const AboutUs = () => {
             Ombudsman Service.
           </p>
           <p>
-            Thousands of people across Africa have lost millions of pounds from
+            Thousands of people  have lost millions of pounds from
             scams. We want to help you get that back.
           </p>
           <p className="text-white font-semibold">
