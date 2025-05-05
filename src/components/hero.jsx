@@ -103,33 +103,7 @@ const Hero = () => {
           <h1 className="text-4xl md:text-5xl font-bold text-white mt-4">
             Recover Your Lost Money with Confidence
           </h1>
-          <form
-            onSubmit={handleFormSubmit}
-            className="mt-6 flex flex-col md:flex-row justify-start gap-4"
-            id="contact-form"
-          >
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter Your Email"
-              autoComplete="email"
-              aria-label="Email"
-              required
-              value={email}
-              onChange={handleEmailChange}
-              className="px-4 py-3 w-full md:w-80 rounded-lg text-black bg-white focus:ring focus:ring-blue-400"
-            />
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-3 rounded-lg font-bold transition duration-300 
-                ${isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:opacity-80'}`}
-              title="Submit"
-              aria-label="Submit"
-            >
-              {isLoading ? "Processing..." : "Submit"}
-            </button>
-          </form>
+      
         </div>
         {/* Right content */}
         <div className="w-full md:w-1/3 mt-8 md:mt-0 flex justify-center items-center">

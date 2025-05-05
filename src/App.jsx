@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "@pages/home";
-import SocialMediaRecoveryPage from "@pages/SocialMediaRecovery";
+import SocialMediaRecoveryForm from "@pages/SocialMediaRecovery";
 import MoneyRecoveryForm from "@pages/MoneyRecovery";
-import CryptoLossReport from "@pages/CryptoCurrencyRecovery";
+import CryptoLossForm from "@pages/CryptoCurrencyRecovery";
 import ArticlesPage from "./pages/articles";
 import RecoveryOptions from "./pages/RecoveryOptions"; // ✅ import new component
 import ContactSection from "./pages/contact";
@@ -28,7 +28,8 @@ function App() {
       <Route path="/coming-soon" element={<ComingSoon/>}/>
       <Route path="/socials" element={<Socials />} />
       <Route path="/money-recovery" element={<MoneyRecoveryForm />} />
-      <Route path="/crypto-recovery" element={<CryptoLossReport />} />
+      <Route path="/crypto-recovery" element={<CryptoLossForm />} />
+      <Route path="/socials-recovery" element={<SocialMediaRecoveryForm/>}/>
       <Route path="/articles" element={<ArticlesPage />} />
       <Route path="/contact" element={<ContactSection />} />
       <Route path="/about" element={<AboutSection />} />

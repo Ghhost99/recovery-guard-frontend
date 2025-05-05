@@ -23,7 +23,7 @@ function RecoveryOptions() {
             },
             {
               label: "Social Media",
-              to: "/socials",
+              to: "/socials-recovery",
               desc: "Hacked or compromised social accounts.",
             },
           ].map(({ label, to, desc }, i) => (

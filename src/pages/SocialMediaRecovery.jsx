@@ -1,28 +1,30 @@
 import { useEffect, useState } from "react";
 import Navbar from "@components/navbar";
+import API_BASE_URL from "../utils/Setup";
+import { authenticatedFetch } from "../utils/auth";
 import { redirectIfIncomplete } from "../utils/navigation";
 
-function SocialMediaRecoveryPage() {
+function SocialMediaRecoveryForm() {
   const [formData, setFormData] = useState({
     platform: "",
-    fullName: "",
+    full_name: "", // Changed from fullName to match backend
     email: "",
     phone: "",
     username: "",
-    profileUrl: "",
-    profilePic: null,
+    profile_url: "", // Changed from profileUrl to match backend
+    profile_pic: null, // Changed from profilePic to match backend
   });
 
   const [submitting, setSubmitting] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
-  useEffect((
-    
-  )=>{
-    redirectIfIncomplete('/coming-soon',true)
-  },[])
+  
+  useEffect(() => {
+    redirectIfIncomplete('/coming-soon', true);
+  }, []);
+  
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "profilePic") {
+    if (name === "profile_pic") { // Changed from profilePic
       setFormData({ ...formData, [name]: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -39,22 +41,25 @@ function SocialMediaRecoveryPage() {
       Object.entries(formData).forEach(([key, value]) => {
         if (value) data.append(key, value);
       });
-       console.log('form:',data);
-       return;
+      
+      // Removed debug console.log and return statement
 
-      const res = await fetch("/api/recover/social", {
+      const response = await authenticatedFetch(`${API_BASE_URL}/cases/social-media-recovery/`, {
         method: "POST",
         body: data,
       });
 
-      const result = await res.json();
-      if (res.ok) {
-        setResponseMsg("Request submitted successfully.");
-      } else {
-        setResponseMsg(result.message || "Submission failed.");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Submission failed");
       }
+      
+      const result = await response.json();
+      setResponseMsg("Request submitted successfully.");
+      // Optionally redirect to a confirmation page
+      // window.location.href = '/dashboard';
     } catch (err) {
-      setResponseMsg("An error occurred while submitting.");
+      setResponseMsg("An error occurred: " + (err.message || "Unknown error"));
       console.error(err);
     } finally {
       setSubmitting(false);
@@ -101,13 +106,13 @@ function SocialMediaRecoveryPage() {
               </select>
             </div>
 
-            {/* Input Fields */}
+            {/* Input Fields - Updated field names to match backend */}
             {[
-              { id: "fullName", label: "Full Name", type: "text", required: true },
+              { id: "full_name", label: "Full Name", type: "text", required: true },
               { id: "email", label: "Email Address", type: "email", required: true },
               { id: "phone", label: "Phone Number", type: "tel" },
               { id: "username", label: "Username / Handle", type: "text", required: true },
-              { id: "profileUrl", label: "Profile URL", type: "url" },
+              { id: "profile_url", label: "Profile URL", type: "url" },
             ].map(({ id, label, type, required }) => (
               <div key={id}>
                 <label htmlFor={id} className="block mb-1 text-white font-medium">{label}</label>
@@ -123,12 +128,12 @@ function SocialMediaRecoveryPage() {
               </div>
             ))}
 
-            {/* File Upload */}
+            {/* File Upload - Updated field name */}
             <div>
-              <label htmlFor="profilePic" className="block mb-1 text-white font-medium">Upload Profile Picture</label>
+              <label htmlFor="profile_pic" className="block mb-1 text-white font-medium">Upload Profile Picture</label>
               <input
-                id="profilePic"
-                name="profilePic"
+                id="profile_pic"
+                name="profile_pic"
                 type="file"
                 accept="image/*"
                 onChange={handleChange}
@@ -155,86 +160,4 @@ function SocialMediaRecoveryPage() {
   );
 }
 
-export default SocialMediaRecoveryPage;
-
-
-
-
-// Here’s clean, professional **documentation** for both your `MoneyRecoveryForm` and `SocialMediaRecoveryPage` components. This includes structure, field descriptions, validation notes, and submission expectations.
-
-// ---
-
-// ## 📄 Component: `MoneyRecoveryForm`
-
-// ### **Purpose:**
-// To collect detailed information from users who have been victims of financial fraud. The form is structured to capture personal, transactional, and descriptive data for investigation and recovery.
-
-// ---
-
-// ### **Form Fields:**
-
-// | Field ID       | Label                                | Type            | Required | Description |
-// |----------------|--------------------------------------|-----------------|----------|-------------|
-// | `firstName`    | First Name                           | `text`          | ✅       | User's legal first name. |
-// | `lastName`     | Last Name                            | `text`          | ✅       | User's legal surname. |
-// | `phone`        | Phone Number                         | `tel`           | ✅       | A contact number for follow-up. |
-// | `email`        | Email Address                        | `email`         | ✅       | User's primary email address. |
-// | `id`           | Identification (DNI/NIE/Passport)    | `text`          | ✅       | Government-issued ID used for verification. |
-// | `amount`       | Amount Lost                          | `number`        | ✅       | Total estimated amount lost. |
-// | `refNumber`    | Reference Number / Transaction ID    | `text`          | ❌       | Optional transaction or case ID. |
-// | `bank`         | Bank / Payment Platform              | `text`          | ✅       | Name of the institution involved. |
-// | `iban`         | Bank Account / IBAN                  | `text`          | ✅       | The user’s IBAN or account number. |
-// | `datetime`     | Date & Time of Transaction           | `datetime-local`| ✅       | Precise timestamp of the fraudulent event. |
-// | `description`  | Description of Fraud                 | `textarea`      | ✅       | User’s detailed account of what happened. |
-// | `files`        | Proof of Fraud                       | `file`          | ❌       | Optional uploads: screenshots, PDFs, documents (multiple allowed). |
-
-// ---
-
-// ### **UI Notes:**
-// - All fields use a glassmorphic UI with semi-transparent dark backgrounds.
-// - Uses Tailwind CSS for styling with strong focus on accessibility and minimalism.
-// - Submit button: `"Proceed to TCP Scan"` (indicating further backend processing).
-
-// ---
-
-// ## 📄 Component: `SocialMediaRecoveryPage`
-
-// ### **Purpose:**
-// Allows users to report and request help recovering a compromised or inaccessible social media account. Tailored to handle multiple platforms.
-
-// ---
-
-// ### **Form Fields:**
-
-// | Field ID       | Label                                | Type     | Required | Description |
-// |----------------|--------------------------------------|----------|----------|-------------|
-// | `platform`     | Platform                             | `select` | ✅       | Dropdown to choose social media platform. |
-// | `fullName`     | Full Name                            | `text`   | ✅       | Full legal name of the account owner. |
-// | `email`        | Email Address                        | `email`  | ✅       | Email linked to the social media account. |
-// | `phone`        | Phone Number                         | `tel`    | ❌       | Optional phone number associated with the account. |
-// | `username`     | Username / Handle                    | `text`   | ✅       | The handle used on the platform. |
-// | `profileUrl`   | Profile URL                          | `url`    | ❌       | Optional full URL to the affected profile. |
-// | `profilePic`   | Upload Profile Picture               | `file`   | ❌       | Optional image to visually confirm identity. Accepts `image/*`. |
-
-// ---
-
-// ### **UI Notes:**
-// - Platform dropdown includes common platforms (e.g., Facebook, TikTok, Reddit).
-// - Emphasis on accessibility and form clarity with clear labels and consistent layout.
-// - Submit button: `"Submit Request"` (triggers backend handling for account recovery).
-
-// ---
-
-// ## ✅ Shared Design Traits
-
-// - **Styling:** Uses your **CyberBrutalist Glass** theme:
-//   - Transparent backgrounds with white borders.
-//   - Glow on focus.
-//   - Rounded corners and shadows.
-//   - Tailwind-based responsive layout.
-// - **UX:** Forms are easy to navigate on both desktop and mobile.
-// - **Accessibility:** Proper label-to-input mapping using `htmlFor` and `id`.
-
-// ---
-
-// Let me know if you'd like a version of this documentation exported in Markdown, PDF, or as a developer handoff spec with Figma-style annotations.
+export default SocialMediaRecoveryForm;
