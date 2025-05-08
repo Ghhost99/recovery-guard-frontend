@@ -4,21 +4,22 @@ import SocialMediaRecoveryForm from "@pages/SocialMediaRecovery";
 import MoneyRecoveryForm from "@pages/MoneyRecovery";
 import CryptoLossForm from "@pages/CryptoCurrencyRecovery";
 import ArticlesPage from "./pages/articles";
-import RecoveryOptions from "./pages/RecoveryOptions"; // ✅ import new component
+import RecoveryOptions from "./pages/RecoveryOptions";
 import ContactSection from "./pages/contact";
 import AboutSection from "./pages/about";
 import FAQSection from "./pages/faq";
-import NotFound from "./pages/NotFound"; // Import the new NotFound component
+import NotFound from "./pages/NotFound"; 
 import Dashboard from "./pages/dashboard";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Notifications from "./pages/Notifications";
 import Cases from "./pages/Cases";
-import MessageList from "./pages/MessageList"; // optional
-import MessageDashboard from "./components/MessageDashboard"; // optional
-import MessageContainer from "./components/MessageContainer"; // optional
+import MessageList from "./pages/MessageList"; 
+import MessageDashboard from "./components/MessageDashboard"; 
+import MessageContainer from "./components/MessageContainer"; 
 import Socials from "./utils/Socials"; 
-import ComingSoon from "./utils/ComingSoon"
+import ComingSoon from "./utils/ComingSoon";
+import CaseHistory from "./pages/CaseHistory";
 function App() {
   return (
     <Routes>
@@ -44,7 +45,7 @@ function App() {
       <Route path="/support" element={<MessageDashboard />} /> {/* optional */}
       <Route path="/cases/:caseId" element={<MessageContainer />} /> {/* optional */}
       <Route path="/cases/:caseId/messages" element={<MessageContainer />} /> {/* optional */}
-      
+      <Route path="/case-history" element={<CaseHistory/>}/>
       {/* Add more routes as needed */}
     </Routes>
   );

@@ -66,5 +66,6 @@ export const getCurrentUserId = () => {
 export const logout = () => {
   localStorage.removeItem('access');
   localStorage.removeItem('refresh');
+  localStorage.removeItem('userId');
   window.location.href = '/login';
 };

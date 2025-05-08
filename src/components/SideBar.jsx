@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";import { useNavigate, useLocation } from "react-router-dom";
 import {
   Home,
   FileText,
@@ -12,18 +11,51 @@ import {
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [position, setPosition] = useState({ x: 20, y: 20 });
+  const buttonRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
 
   const sidebarItems = [
-    { label: "Dashboard Overview", path: "/", icon: <Home className="w-6 h-6" /> },
     { label: "Submit New Case", path: "/start-recovery", icon: <FileText className="w-6 h-6" /> },
-    { label: "My Case History", path: "/my-cases", icon: <Folder className="w-6 h-6" /> },
-    { label: "Messages/Support", path: "/support", icon: <MessageCircle className="w-6 h-6" /> },
-    { label: "Settings", path: "/settings", icon: <Settings className="w-6 h-6" /> },
+    { label: "My Case History", path: "/case-history", icon: <Folder className="w-6 h-6" /> },
+    { label: "Support", path: "/socials", icon: <MessageCircle className="w-6 h-6" /> },
   ];
 
   const toggleSidebar = () => setIsOpen(!isOpen);
+
+  // Drag logic
+  useEffect(() => {
+    const button = buttonRef.current;
+    if (!button) return;
+
+    let isDragging = false;
+    let startX, startY;
+
+    const onMouseDown = (e) => {
+      isDragging = true;
+      startX = e.clientX - position.x;
+      startY = e.clientY - position.y;
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    };
+
+    const onMouseMove = (e) => {
+      if (!isDragging) return;
+      setPosition({ x: e.clientX - startX, y: e.clientY - startY });
+    };
+
+    const onMouseUp = () => {
+      isDragging = false;
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+    };
+
+    button.addEventListener("mousedown", onMouseDown);
+    return () => {
+      button.removeEventListener("mousedown", onMouseDown);
+    };
+  }, [position]);
 
   return (
     <div className="relative z-50">
@@ -35,24 +67,30 @@ const Sidebar = () => {
         />
       )}
 
-      {/* Hamburger for Mobile */}
+      {/* Floating Draggable Button (Mobile Only) */}
       {!isOpen && (
         <button
+          ref={buttonRef}
           onClick={toggleSidebar}
-          className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white/10 border border-white/30 rounded-lg hover:scale-105 hover:shadow-glow transition"
+          className="lg:hidden fixed z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all"
+          style={{
+            left: `${position.x}px`,
+            top: `${position.y}px`,
+            cursor: "grab",
+          }}
           aria-label="Open Sidebar"
         >
-          <Menu className="w-6 h-6 text-white" />
+          <Menu className="w-6 h-6" />
         </button>
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar Content */}
       <div
         className={`fixed inset-y-0 left-0 w-64 p-4 h-screen bg-black/60 backdrop-blur-md text-white border-r border-white/20 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         lg:static lg:translate-x-0 lg:block`}
       >
-        {/* Close Button (mobile only) */}
+        {/* Close Button */}
         <div className="lg:hidden flex justify-end mb-4 ">
           <button
             onClick={toggleSidebar}
@@ -72,7 +110,7 @@ const Sidebar = () => {
                 <button
                   onClick={() => {
                     navigate(item.path);
-                    setIsOpen(false); // close on mobile
+                    setIsOpen(false);
                   }}
                   className={`flex items-center space-x-4 px-4 py-2 w-full text-left rounded-lg border border-transparent
                     transition-all duration-200

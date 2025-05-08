@@ -35,10 +35,10 @@ const Footer = () => {
     };
 
     return (
-        <div className="flex items-center justify-center mb-3 pb-2  w-full">
-            <div className="bg-white/5 border border-white rounded-2xl shadow-lg  w-full text-center backdrop-blur-md">
+        <div className="flex items-center justify-center  p-4 w-full">
+            <div className="bg-black border border-white rounded-2xl shadow-lg  w-full text-center backdrop-blur-md">
                 <h1 className="text-4xl font-extrabold font-mono text-white mb-8">Talk To  Us</h1>
-                <div className="flex justify-center gap-6 flex-wrap">
+                <div className="flex justify-center gap-6 flex-wrap my-auto">
                     {socialLinks.map(({ name, url, icon, hoverColor }) => (
                         <button
                             key={name}
