@@ -1,81 +1,59 @@
 import React from 'react';
+import {
+    Facebook,
+    Twitter,
+    Instagram,
+    Linkedin,
+    Github,
+    Send
+} from 'lucide-react';
+const socialLinks = [
+  {
+    name: 'Instagram',
+    url: 'https://www.instagram.com/ayudacibernetica1?igsh=dzYzcXExOTMza2Vq',
+    icon: <Instagram size={20} />,
+    hoverColor: 'hover:text-pink-500'
+  },
+  {
+    name: 'Telegram',
+    url: 'https://t.me/recuperacionsegura',
+    icon: <Send size={20} />,
+    hoverColor: 'hover:text-blue-300'
+  },
+  {
+    name: 'Twitter (X)',
+    url: 'https://x.com/1Ciberseguridad?t=48PlVMhZ1BJDLTVEYIlVvw&s=09',
+    icon: <Twitter size={20} />,
+    hoverColor: 'hover:text-blue-400'
+  }
+];
 
 const Footer = () => {
-  return (
-    <footer className="bg-white/5 text-white border-t border-white/10 backdrop-blur-md mt-16">
-      <div className="max-w-6xl mx-auto px-4 py-12 space-y-12">
+    const handleOpenLink = (url) => {
+        console.log(`${url} clicked`)
+        window.open(url, '_blank', 'noopener,noreferrer');
+    };
 
-        {/* Top Notice */}
-        <div className="text-center py-3 border-b border-white/10 text-sm text-gray-300">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    return (
+        <div className="flex items-center justify-center mb-3 pb-2  w-full">
+            <div className="bg-white/5 border border-white rounded-2xl shadow-lg  w-full text-center backdrop-blur-md">
+                <h1 className="text-4xl font-extrabold font-mono text-white mb-8">Talk To  Us</h1>
+                <div className="flex justify-center gap-6 flex-wrap">
+                    {socialLinks.map(({ name, url, icon, hoverColor }) => (
+                        <button
+                            key={name}
+                            onClick={() => handleOpenLink(url)}
+                            className={`text-white ${hoverColor} transition-all`}
+                            aria-label={name}
+                            type="button"
+                        >
+                            {icon}
+                        </button>
+                    ))}
+                </div>
+            </div>
         </div>
-
-        {/* Footer Columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 text-sm">
-          {/* Recovery Guard */}
-          <div>
-            <h3 className="text-lg font-bold mb-4">Recovery Guard</h3>
-            <ul className="space-y-2 text-gray-300">
-              <li><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-              <li><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-              <li><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-              <li><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-              <li className="mt-2"><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-            </ul>
-          </div>
-
-          {/* Banks */}
-          <div>
-            <h3 className="text-lg font-bold mb-4">Banks</h3>
-            <ul className="space-y-2 text-gray-300">
-              <li><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-              <li><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-              <li><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-              <li><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-            </ul>
-          </div>
-
-          {/* Support */}
-          <div>
-            <h3 className="text-lg font-bold mb-4">Support</h3>
-            <ul className="space-y-2 text-gray-300">
-              <li><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-              <li><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-              <li><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-              <li><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h3 className="text-lg font-bold mb-4">Talk to us</h3>
-            <ul className="space-y-2 text-gray-300">
-              <li><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-              <li><a href="#" className="hover:text-white transition">Lorem ipsum</a></li>
-              <li>
-                <a href="mailto:dummyemail@example.com" className="hover:text-white transition">
-                  dummyemail@example.com
-                </a>
-              </li>
-              <li>
-                <a href="tel:+1234567890" className="hover:text-white transition">
-                  +1 (234) 567-890
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Regulatory Info */}
-        <div className="text-xs text-gray-400 border-t border-white/10 pt-6">
-          <p className="leading-relaxed">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce vel urna ut leo ullamcorper pretium non ac nulla. 
-            Vivamus tincidunt tortor felis, sed consequat urna placerat id. Curabitur facilisis tincidunt enim vel porttitor.
-          </p>
-        </div>
-      </div>
-    </footer>
-  );
+    );
 };
 
 export default Footer;

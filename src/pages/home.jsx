@@ -10,13 +10,16 @@ function Home() {
   const navigate = useNavigate(); // Hook for navigation
 
   return (
-    <>
+    < >
+      <div className="flex flex-col">
       <Navbar />
       <Hero />
       <AnimatedIcons />
       <Features />
       {/* <FeaturedArticles/> */}
       <Footer />
+
+      </div>
     </>
   );
 }

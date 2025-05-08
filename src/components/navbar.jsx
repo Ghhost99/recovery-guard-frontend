@@ -57,7 +57,7 @@ const Navbar = () => {
           className="text-xl font-bold cursor-pointer mr-4"
           onClick={() => handleNavigate("/")}
         >
-          Recovery Guard
+          Safe Trust Recovery
         </h1>
         <img src={logoImage} alt="Recovery Guard" className="max-h-10 w-auto" />
       </div>
