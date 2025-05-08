@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Home,
   FileText,
@@ -24,7 +25,7 @@ const Sidebar = () => {
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
-  // Drag logic
+  // Drag logic with touch support
   useEffect(() => {
     const button = buttonRef.current;
     if (!button) return;
@@ -32,6 +33,7 @@ const Sidebar = () => {
     let isDragging = false;
     let startX, startY;
 
+    // Mouse event handlers
     const onMouseDown = (e) => {
       isDragging = true;
       startX = e.clientX - position.x;
@@ -51,9 +53,43 @@ const Sidebar = () => {
       document.removeEventListener("mouseup", onMouseUp);
     };
 
+    // Touch event handlers
+    const onTouchStart = (e) => {
+      if (e.touches.length === 1) {
+        isDragging = true;
+        const touch = e.touches[0];
+        startX = touch.clientX - position.x;
+        startY = touch.clientY - position.y;
+        document.addEventListener("touchmove", onTouchMove, { passive: false });
+        document.addEventListener("touchend", onTouchEnd);
+      }
+    };
+
+    const onTouchMove = (e) => {
+      if (!isDragging || e.touches.length !== 1) return;
+      e.preventDefault(); // Prevent scrolling while dragging
+      const touch = e.touches[0];
+      setPosition({ x: touch.clientX - startX, y: touch.clientY - startY });
+    };
+
+    const onTouchEnd = () => {
+      isDragging = false;
+      document.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("touchend", onTouchEnd);
+    };
+
+    // Add event listeners
     button.addEventListener("mousedown", onMouseDown);
+    button.addEventListener("touchstart", onTouchStart);
+
+    // Clean up
     return () => {
       button.removeEventListener("mousedown", onMouseDown);
+      button.removeEventListener("touchstart", onTouchStart);
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+      document.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("touchend", onTouchEnd);
     };
   }, [position]);
 
@@ -71,8 +107,13 @@ const Sidebar = () => {
       {!isOpen && (
         <button
           ref={buttonRef}
-          onClick={toggleSidebar}
-          className="lg:hidden fixed z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all"
+          onClick={(e) => {
+            // Only toggle if not dragging
+            if (!e.target.dragging) {
+              toggleSidebar();
+            }
+          }}
+          className="lg:hidden fixed z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all touch-none"
           style={{
             left: `${position.x}px`,
             top: `${position.y}px`,
