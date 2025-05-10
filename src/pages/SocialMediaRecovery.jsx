@@ -19,7 +19,7 @@ function SocialMediaRecoveryForm() {
   const [responseMsg, setResponseMsg] = useState("");
   
   useEffect(() => {
-    redirectIfIncomplete('/coming-soon', true);
+    redirectIfIncomplete('/coming-soon', false);
   }, []);
   
   const handleChange = (e) => {
