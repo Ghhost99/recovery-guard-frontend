@@ -70,7 +70,7 @@ function CryptoLossForm() {
   };
 
   useEffect(() => {
-    redirectIfIncomplete('/coming-soon', true);
+    redirectIfIncomplete('/coming-soon', false);
   }, []);
 
   return (
