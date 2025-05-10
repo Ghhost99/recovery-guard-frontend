@@ -20,7 +20,7 @@ function MoneyRecoveryForm() {
     supporting_documents: [] // Changed to match backend relationship name
   });
   useEffect(() => {
-    redirectIfIncomplete('/coming-soon', true);
+    redirectIfIncomplete('/coming-soon', false);
   }, []);
 
   // Handle field changes
