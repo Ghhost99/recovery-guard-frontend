@@ -1,11 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import tailwindcss from '@tailwindcss/vite'
+import tailwindcss from '@tailwindcss/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(),tailwindcss()
-  ],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       '@components': '/src/components',
@@ -17,12 +16,11 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'https://recovery-guard-backend.onrender.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
     },
   },
   assetsInclude: ['**/*.gif', '**/*.GIF'],
 });
-
