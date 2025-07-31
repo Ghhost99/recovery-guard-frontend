@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://recovery-guard-backend.onrender.com/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }
