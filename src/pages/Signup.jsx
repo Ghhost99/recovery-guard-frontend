@@ -3,7 +3,7 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";  
 import API_BASE_URL from "../utils/Setup";
 export default function Signup({ role = "customer" }) {
-  const endpoint = `${API_BASE_URL}/create-customer/`; // Update with your API URL
+  const endpoint = `${API_BASE_URL}/auth/create-customer/`; // Update with your API URL
   
   const [form, setForm] = useState({
     email: "",
