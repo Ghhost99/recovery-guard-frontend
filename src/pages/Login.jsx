@@ -1,10 +1,12 @@
 import { useState } from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import API_BASE_URL from "../utils/Setup";
+
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
-  const endpoint = "/api/auth/login/";
+const endpoint = `${API_BASE_URL}/auth/login/`;
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
