@@ -6,7 +6,7 @@ const LanguageSelector = () => {
   const navigate = useNavigate();
   const [selectedLanguage, setSelectedLanguage] = useState(Cookies.get('googtrans')?.split('/')[2] || 'en');
   const [error, setError] = useState(null);
-
+  
   const languages = [
     { code: 'en', name: 'English' },
     { code: 'es', name: 'Español' },
@@ -16,40 +16,67 @@ const LanguageSelector = () => {
   ];
 
   useEffect(() => {
-    // Check if Google Translate is available
-    if (!window.google || !window.google.translate) {
-      setError('Translation service unavailable. Please disable ad blockers or try again later.');
-      return;
-    }
+    let retryCount = 0;
+    const maxRetries = 10;
+    const retryDelay = 500; // 500ms between retries
 
-    // Restore language from cookie
-    const savedLang = Cookies.get('googtrans');
-    if (savedLang) {
-      const select = document.querySelector('#google_translate_element select');
-      if (select) {
-        select.value = savedLang.split('/')[2] || 'en';
-        select.dispatchEvent(new Event('change'));
+    const checkGoogleTranslate = () => {
+      // Check if Google Translate is available
+      if (!window.google || !window.google.translate) {
+        console.log(`Attempt ${retryCount + 1}: Google Translate not available yet`);
+        if (retryCount < maxRetries) {
+          retryCount++;
+          setTimeout(checkGoogleTranslate, retryDelay);
+          return;
+        }
+        setError('Translation service unavailable. Please disable ad blockers or try again later.');
+        return;
       }
-    }
 
-    // Listen for language selection changes
-    const select = document.querySelector('#google_translate_element select');
-    if (select) {
-      select.addEventListener('change', () => {
+      // Look for the select element
+      const select = document.querySelector('#google_translate_element select');
+      if (!select) {
+        console.log(`Attempt ${retryCount + 1}: Google Translate select element not found yet`);
+        if (retryCount < maxRetries) {
+          retryCount++;
+          setTimeout(checkGoogleTranslate, retryDelay);
+          return;
+        }
+        setError('Translation service unavailable. Please try again later.');
+        return;
+      }
+
+      console.log('Google Translate initialized successfully');
+      
+      // Restore language from cookie
+      const savedLang = Cookies.get('googtrans');
+      if (savedLang) {
+        const langCode = savedLang.split('/')[2] || 'en';
+        select.value = langCode;
+        select.dispatchEvent(new Event('change'));
+        setSelectedLanguage(langCode);
+      }
+
+      // Listen for language selection changes
+      const handleChange = () => {
         const selectedLang = select.value;
         setSelectedLanguage(selectedLang);
         Cookies.set('googtrans', `/en/${selectedLang}`, { expires: 30 });
-      });
-    } else if (!error) {
-      setError('Translation service unavailable. Please try again later.');
-    }
+      };
 
-    return () => {
-      if (select) {
-        select.removeEventListener('change', () => {});
-      }
+      select.addEventListener('change', handleChange);
+      
+      // Cleanup function
+      return () => {
+        select.removeEventListener('change', handleChange);
+      };
     };
-  }, []);
+
+    // Start checking
+    const cleanup = checkGoogleTranslate();
+    
+    return cleanup;
+  }, []); // Remove error from dependencies
 
   const handleLanguageChange = (langCode) => {
     setSelectedLanguage(langCode);
@@ -58,6 +85,7 @@ const LanguageSelector = () => {
       select.value = langCode;
       select.dispatchEvent(new Event('change'));
       Cookies.set('googtrans', `/en/${langCode}`, { expires: 30 });
+      setError(null); // Clear error on successful change
     } else {
       setError('Translation service unavailable. Please try again later.');
     }
@@ -73,11 +101,13 @@ const LanguageSelector = () => {
         <h1 className="text-2xl font-bold text-white mb-6 text-center">
           Select Your Language
         </h1>
+        
         {error && (
           <div className="mb-4 p-3 bg-red-600/80 text-white rounded-lg text-center">
             {error}
           </div>
         )}
+        
         <div className="space-y-4">
           {languages.map((lang) => (
             <button
@@ -93,6 +123,7 @@ const LanguageSelector = () => {
             </button>
           ))}
         </div>
+        
         <button
           onClick={handleSave}
           className="w-full mt-6 py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 font-medium"

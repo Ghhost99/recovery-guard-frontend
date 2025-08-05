@@ -11,12 +11,64 @@
     <link rel="stylesheet" href="src/index.css">
     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
     <title>Safe Trust Recovery</title>
+    <style>
+      #google_translate_element {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 9999;
+        font-family: 'Montserrat', sans-serif;
+      }
+
+      #google_translate_element select {
+        background-color: #1f2937;
+        color: #ffffff;
+        border: 2px solid #4b5eaa;
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      #google_translate_element select:hover {
+        background-color: #4b5eaa;
+        border-color: #ffffff;
+        transform: translateY(-2px);
+      }
+
+      #google_translate_element select:focus {
+        box-shadow: 0 0 0 3px rgba(75, 94, 170, 0.3);
+      }
+
+      .goog-te-gadget {
+        font-size: 0;
+      }
+
+      .goog-te-gadget > div {
+        display: inline-block;
+      }
+
+      .goog-te-gadget img {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        #google_translate_element select {
+          font-size: 12px;
+          padding: 4px 8px;
+        }
+      }
+    </style>
   </head>
   <body class="bg-cover bg-center bg-no-repeat min-h-screen font-montserrat" style="background-image: url('src/assets/bg_2.JPG')">
     <div id="root" class="w-screen min-h-screen bg-[#1F303F] bg-opacity-60"></div>
     
-    <!-- Google Translate dropdown (hidden, controlled by LanguageSelector) -->
-    <div id="google_translate_element" style="display: none;"></div>
+    <!-- Google Translate dropdown -->
+    <div id="google_translate_element"></div>
 
     <script type="module" src="/src/main.jsx"></script>
 
@@ -26,7 +78,7 @@
         new google.translate.TranslateElement(
           {
             pageLanguage: 'en',
-            includedLanguages: 'en,es,fr,de,zh-CN', // Match LanguageSelector languages
+            includedLanguages: 'en,es,fr,de,zh-CN',
             layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
           },
           'google_translate_element'

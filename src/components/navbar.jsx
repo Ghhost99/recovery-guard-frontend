@@ -25,14 +25,14 @@ const Navbar = () => {
     { label: 'My Cases', path: '/cases' },
     { label: 'Support', path: '/support' },
     { label: 'FAQ', path: '/faq' },
-    { label: 'Language', path: '/language' },
+    // { label: 'Language', path: '/language' },
     { label: 'Logout', path: '/logout', onClick: handleLogout },
   ];
 
   const guestNavItems = [
     { label: 'Home', path: '/' },
     { label: 'FAQ', path: '/faq' },
-    { label: 'Language', path: '/language' },
+    // { label: 'Language', path: '/language' },
     { label: 'Login', path: '/login' },
     { label: 'SignUp', path: '/signup' },
   ];
