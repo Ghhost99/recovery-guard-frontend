@@ -7,17 +7,34 @@
     <link rel="icon" type="image/png" sizes="16x16" href="src/assets/favicon/favicon-16x16.png">
     <link rel="manifest" href="src/assets/favicon/site.webmanifest">
     <link rel="stylesheet" href="output.css" type="text/css">
-    
- 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="src/index.css">
-
     <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
-    
     <title>Safe Trust Recovery</title>
   </head>
   <body class="bg-cover bg-center bg-no-repeat min-h-screen font-montserrat" style="background-image: url('src/assets/bg_2.JPG')">
     <div id="root" class="w-screen min-h-screen bg-[#1F303F] bg-opacity-60"></div>
+    
+    <!-- Google Translate dropdown (hidden, controlled by LanguageSelector) -->
+    <div id="google_translate_element" style="display: none;"></div>
+
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Google Translate script -->
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          {
+            pageLanguage: 'en',
+            includedLanguages: 'en,es,fr,de,zh-CN', // Match LanguageSelector languages
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+          },
+          'google_translate_element'
+        );
+      }
+    </script>
+    <script type="text/javascript" 
+      src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+    </script>
   </body>
 </html>

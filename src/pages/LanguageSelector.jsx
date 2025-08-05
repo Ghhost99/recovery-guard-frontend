@@ -5,40 +5,48 @@ import Cookies from 'js-cookie';
 const LanguageSelector = () => {
   const navigate = useNavigate();
   const [selectedLanguage, setSelectedLanguage] = useState(Cookies.get('googtrans')?.split('/')[2] || 'en');
+  const [error, setError] = useState(null);
 
-  // List of languages supported by Google Translate (partial list, expand as needed)
   const languages = [
     { code: 'en', name: 'English' },
     { code: 'es', name: 'Español' },
     { code: 'fr', name: 'Français' },
     { code: 'de', name: 'Deutsch' },
     { code: 'zh-CN', name: '中文 (简体)' },
-    // Add more languages as needed
   ];
 
-  // Initialize Google Translate
   useEffect(() => {
-    window.googleTranslateElementInit = () => {
-      new window.google.translate.TranslateElement(
-        {
-          pageLanguage: 'en',
-          includedLanguages: languages.map(lang => lang.code).join(','), // Restrict to listed languages
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-        },
-        'google_translate_element'
-      );
-    };
+    // Check if Google Translate is available
+    if (!window.google || !window.google.translate) {
+      setError('Translation service unavailable. Please disable ad blockers or try again later.');
+      return;
+    }
 
-    // Load Google Translate script
-    const script = document.createElement('script');
-    script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-    script.async = true;
-    document.body.appendChild(script);
+    // Restore language from cookie
+    const savedLang = Cookies.get('googtrans');
+    if (savedLang) {
+      const select = document.querySelector('#google_translate_element select');
+      if (select) {
+        select.value = savedLang.split('/')[2] || 'en';
+        select.dispatchEvent(new Event('change'));
+      }
+    }
 
-    // Cleanup script on unmount
+    // Listen for language selection changes
+    const select = document.querySelector('#google_translate_element select');
+    if (select) {
+      select.addEventListener('change', () => {
+        const selectedLang = select.value;
+        setSelectedLanguage(selectedLang);
+        Cookies.set('googtrans', `/en/${selectedLang}`, { expires: 30 });
+      });
+    } else if (!error) {
+      setError('Translation service unavailable. Please try again later.');
+    }
+
     return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
+      if (select) {
+        select.removeEventListener('change', () => {});
       }
     };
   }, []);
@@ -48,13 +56,15 @@ const LanguageSelector = () => {
     const select = document.querySelector('#google_translate_element select');
     if (select) {
       select.value = langCode;
-      select.dispatchEvent(new Event('change')); // Trigger Google Translate change
-      Cookies.set('googtrans', `/en/${langCode}`, { expires: 30 }); // Save for 30 days
+      select.dispatchEvent(new Event('change'));
+      Cookies.set('googtrans', `/en/${langCode}`, { expires: 30 });
+    } else {
+      setError('Translation service unavailable. Please try again later.');
     }
   };
 
   const handleSave = () => {
-    navigate('/'); // Redirect to home
+    navigate('/');
   };
 
   return (
@@ -63,6 +73,11 @@ const LanguageSelector = () => {
         <h1 className="text-2xl font-bold text-white mb-6 text-center">
           Select Your Language
         </h1>
+        {error && (
+          <div className="mb-4 p-3 bg-red-600/80 text-white rounded-lg text-center">
+            {error}
+          </div>
+        )}
         <div className="space-y-4">
           {languages.map((lang) => (
             <button
@@ -84,21 +99,7 @@ const LanguageSelector = () => {
         >
           Save
         </button>
-        {/* Hidden Google Translate element to handle translation logic */}
-        <div id="google_translate_element" style={{ display: 'none' }}></div>
       </div>
-
-      <style jsx>{`
-        .goog-te-gadget {
-          font-size: 0;
-        }
-        .goog-te-gadget > div {
-          display: none;
-        }
-        .goog-te-gadget img {
-          display: none;
-        }
-      `}</style>
     </div>
   );
 };
