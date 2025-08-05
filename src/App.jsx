@@ -20,6 +20,7 @@ import MessageContainer from "./components/MessageContainer";
 import Socials from "./utils/Socials"; 
 import ComingSoon from "./utils/ComingSoon";
 import CaseHistory from "./pages/CaseHistory";
+import LanguageSelector from "./pages/LanguageSelector";
 function App() {
   return (
     <Routes>
@@ -46,6 +47,7 @@ function App() {
       <Route path="/cases/:caseId" element={<MessageContainer />} /> {/* optional */}
       <Route path="/cases/:caseId/messages" element={<MessageContainer />} /> {/* optional */}
       <Route path="/case-history" element={<CaseHistory/>}/>
+<Route path="/language" element={<LanguageSelector />} />
       {/* Add more routes as needed */}
     </Routes>
   );
