@@ -49,7 +49,7 @@ function CryptoLossForm() {
     });
 
     try {
-      const response = await authenticatedFetch(`${API_BASE_URL}/cases/crypto-recovery/`, {
+      const response = await authenticatedFetch(`${API_BASE_URL}/cases/crypto/`, {
         method: 'POST',
         body: data,
       });

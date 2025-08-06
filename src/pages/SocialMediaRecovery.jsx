@@ -44,7 +44,7 @@ function SocialMediaRecoveryForm() {
       
       // Removed debug console.log and return statement
 
-      const response = await authenticatedFetch(`${API_BASE_URL}/cases/social-media-recovery/`, {
+      const response = await authenticatedFetch(`${API_BASE_URL}/cases/social-media/`, {
         method: "POST",
         body: data,
       });
