@@ -8,6 +8,7 @@ function CryptoLossForm() {
   const [formData, setFormData] = useState({
     // Required Case fields
     title: '',
+    description: '', // Main case description
     
     // CryptoLossReport specific fields
     amount_lost: '',
@@ -22,7 +23,7 @@ function CryptoLossForm() {
     wallet_backup: '',
     crypto_type: 'Bitcoin',
     transaction_datetime: '',
-    loss_description: '', // Fixed: was 'description'
+    loss_description: '', // Detailed loss description
     supporting_documents: []
   });
 
@@ -96,8 +97,23 @@ function CryptoLossForm() {
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="Brief title describing your crypto loss"
-                className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl"
+                className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl placeholder-gray-300"
               />
+            </div>
+
+            {/* Case Description - Required field */}
+            <div>
+              <label htmlFor="description" className="block mb-1 font-medium">Case Description</label>
+              <textarea
+                id="description"
+                name="description"
+                rows="3"
+                required
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Brief overview of the incident"
+                className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl placeholder-gray-300"
+              ></textarea>
             </div>
 
             {/* Crypto Information */}
@@ -112,16 +128,16 @@ function CryptoLossForm() {
                 className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl"
               >
                 {["Bitcoin", "Ethereum", "USDT", "BNB", "Solana", "Other"].map(option => (
-                  <option key={option} value={option}>{option}</option>
+                  <option key={option} value={option} className="bg-gray-800 text-white">{option}</option>
                 ))}
               </select>
             </div>
 
             {/* Amount Information */}
             {[ 
-              { id: "amount_lost", label: "Amount Lost (in cryptocurrency)", type: "number", step: "0.00000001" },
-              { id: "usdt_value", label: "Value in USDT", type: "number", step: "0.00000001" },
-            ].map(({ id, label, type, step }) => (
+              { id: "amount_lost", label: "Amount Lost (in cryptocurrency)", type: "number", step: "0.00000001", placeholder: "e.g., 1500.00000000" },
+              { id: "usdt_value", label: "Value in USDT", type: "number", step: "0.00000001", placeholder: "e.g., 1500.00000000" },
+            ].map(({ id, label, type, step, placeholder }) => (
               <div key={id}>
                 <label htmlFor={id} className="block mb-1 font-medium">{label}</label>
                 <input
@@ -132,20 +148,21 @@ function CryptoLossForm() {
                   required
                   value={formData[id]}
                   onChange={handleChange}
-                  className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl"
+                  placeholder={placeholder}
+                  className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl placeholder-gray-300"
                 />
               </div>
             ))}
 
             {/* Transaction Details */}
             {[ 
-              { id: "txid", label: "Transaction ID / Hash", type: "text" },
-              { id: "sender_wallet", label: "Sender Wallet Address", type: "text" },
-              { id: "receiver_wallet", label: "Receiver Wallet Address", type: "text" },
-              { id: "platform_used", label: "Platform/Exchange Used", type: "text" },
-              { id: "blockchain_hash", label: "Blockchain Hash (if different from txid)", type: "text", required: false },
-              { id: "payment_method", label: "Payment Method", type: "text", required: false },
-            ].map(({ id, label, type, required = true }) => (
+              { id: "txid", label: "Transaction ID / Hash", type: "text", placeholder: "e.g., 0x123456abcdef7890" },
+              { id: "sender_wallet", label: "Sender Wallet Address", type: "text", placeholder: "e.g., 0xSenderWalletAddress123" },
+              { id: "receiver_wallet", label: "Receiver Wallet Address", type: "text", placeholder: "e.g., 0xReceiverWalletAddress456" },
+              { id: "platform_used", label: "Platform/Exchange Used", type: "text", placeholder: "e.g., FakeTradingPro" },
+              { id: "blockchain_hash", label: "Blockchain Hash (if different from txid)", type: "text", required: false, placeholder: "e.g., 0xblockhashabc123" },
+              { id: "payment_method", label: "Payment Method", type: "text", required: false, placeholder: "e.g., Crypto transfer" },
+            ].map(({ id, label, type, required = true, placeholder }) => (
               <div key={id}>
                 <label htmlFor={id} className="block mb-1 font-medium">{label}</label>
                 <input
@@ -155,29 +172,41 @@ function CryptoLossForm() {
                   required={required}
                   value={formData[id]}
                   onChange={handleChange}
-                  className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl"
+                  placeholder={placeholder}
+                  className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl placeholder-gray-300"
                 />
               </div>
             ))}
 
             {/* Exchange Info & Wallet Backup */}
-            {[
-              { id: "exchange_info", label: "Exchange Information (optional)", rows: 2, required: false },
-              { id: "wallet_backup", label: "Wallet Backup Information (optional)", rows: 2, required: false },
-            ].map(({ id, label, rows, required }) => (
-              <div key={id}>
-                <label htmlFor={id} className="block mb-1 font-medium">{label}</label>
-                <textarea
-                  id={id}
-                  name={id}
-                  rows={rows}
-                  required={required}
-                  value={formData[id]}
-                  onChange={handleChange}
-                  className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl"
-                ></textarea>
-              </div>
-            ))}
+            <div>
+              <label htmlFor="exchange_info" className="block mb-1 font-medium">Exchange Information (optional)</label>
+              <textarea
+                id="exchange_info"
+                name="exchange_info"
+                rows="2"
+                value={formData.exchange_info}
+                onChange={handleChange}
+                placeholder="Additional information about the exchange or platform"
+                className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl placeholder-gray-300"
+              ></textarea>
+            </div>
+
+            <div>
+              <label htmlFor="wallet_backup" className="block mb-1 font-medium">Wallet Backup Information</label>
+              <select
+                id="wallet_backup"
+                name="wallet_backup"
+                required
+                value={formData.wallet_backup}
+                onChange={handleChange}
+                className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl"
+              >
+                <option value="">Select wallet backup status</option>
+                <option value="True" className="bg-gray-800 text-white">Yes, I have wallet backup</option>
+                <option value="False" className="bg-gray-800 text-white">No, I don't have wallet backup</option>
+              </select>
+            </div>
 
             {/* Transaction Timestamp */}
             <div>
@@ -193,9 +222,9 @@ function CryptoLossForm() {
               />
             </div>
 
-            {/* Loss Description - Fixed field name */}
+            {/* Loss Description - Detailed description */}
             <div>
-              <label htmlFor="loss_description" className="block mb-1 font-medium">Description of Loss/Incident</label>
+              <label htmlFor="loss_description" className="block mb-1 font-medium">Detailed Description of Loss/Incident</label>
               <textarea
                 id="loss_description"
                 name="loss_description"
@@ -203,13 +232,14 @@ function CryptoLossForm() {
                 required
                 value={formData.loss_description}
                 onChange={handleChange}
-                className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl"
+                placeholder="Provide a detailed explanation of how the loss occurred, what happened, and any additional context"
+                className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl placeholder-gray-300"
               ></textarea>
             </div>
 
             {/* File Upload */}
             <div>
-              <label htmlFor="supporting_documents" className="block mb-1 font-medium">Supporting Documents</label>
+              <label htmlFor="supporting_documents" className="block mb-1 font-medium">Supporting Documents (optional)</label>
               <input
                 id="supporting_documents"
                 name="supporting_documents"
@@ -217,14 +247,15 @@ function CryptoLossForm() {
                 multiple
                 accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"
                 onChange={handleChange}
-                className="w-full p-3 bg-white/10 text-gray-200 border border-white/20 rounded-xl cursor-pointer"
+                className="w-full p-3 bg-white/10 text-gray-200 border border-white/20 rounded-xl cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
               />
+              <p className="text-sm text-gray-300 mt-1">Upload screenshots, transaction confirmations, communications, etc.</p>
             </div>
 
             {/* Submit */}
             <button
               type="submit"
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl shadow-lg transition duration-300"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-2xl shadow-lg transition duration-300 transform hover:scale-105"
             >
               Submit Report
             </button>
