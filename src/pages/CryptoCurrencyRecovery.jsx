@@ -18,7 +18,7 @@ function CryptoLossForm() {
     wallet_backup: '',
     crypto_type: 'Bitcoin',
     transaction_datetime: '',
-    loss_description: '',
+    description: '',
     supporting_documents: []
   });
 
