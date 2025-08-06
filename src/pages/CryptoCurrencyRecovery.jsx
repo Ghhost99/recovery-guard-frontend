@@ -6,6 +6,10 @@ import { redirectIfIncomplete } from '../utils/navigation';
 
 function CryptoLossForm() {
   const [formData, setFormData] = useState({
+    // Required Case fields
+    title: '',
+    
+    // CryptoLossReport specific fields
     amount_lost: '',
     usdt_value: '',
     txid: '',
@@ -18,7 +22,7 @@ function CryptoLossForm() {
     wallet_backup: '',
     crypto_type: 'Bitcoin',
     transaction_datetime: '',
-    description: '',
+    loss_description: '', // Fixed: was 'description'
     supporting_documents: []
   });
 
@@ -81,6 +85,21 @@ function CryptoLossForm() {
           <h2 className="text-3xl font-bold text-center mb-8">Report Crypto Loss</h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Case Title - Required field */}
+            <div>
+              <label htmlFor="title" className="block mb-1 font-medium">Case Title</label>
+              <input
+                id="title"
+                name="title"
+                type="text"
+                required
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="Brief title describing your crypto loss"
+                className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl"
+              />
+            </div>
+
             {/* Crypto Information */}
             <div>
               <label htmlFor="crypto_type" className="block mb-1 font-medium">Cryptocurrency Type</label>
@@ -174,7 +193,7 @@ function CryptoLossForm() {
               />
             </div>
 
-            {/* Loss Description */}
+            {/* Loss Description - Fixed field name */}
             <div>
               <label htmlFor="loss_description" className="block mb-1 font-medium">Description of Loss/Incident</label>
               <textarea

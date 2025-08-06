@@ -6,19 +6,24 @@ import { redirectIfIncomplete } from '../utils/navigation';
 
 function MoneyRecoveryForm() {
   const [formData, setFormData] = useState({
+    // Required Case fields
+    title: '',
+    description: '', // Changed from 'loss_description' - this is the Case model field
+    
+    // MoneyRecoveryReport specific fields
     first_name: '',
     last_name: '',
     phone: '',
     email: '',
     identification: '',
     amount: '',
-    ref_number: '', // Changed from reference_number to ref_number to match backend model
+    ref_number: '',
     bank: '',
     iban: '',
     datetime: '',
-    loss_description: '', // Changed from description to align with backend expectations
-    supporting_documents: [] // Changed to match backend relationship name
+    supporting_documents: []
   });
+
   useEffect(() => {
     redirectIfIncomplete('/coming-soon', false);
   }, []);
@@ -70,8 +75,6 @@ function MoneyRecoveryForm() {
     }
   };
 
-
-
   return (
     <>
       <Navbar />
@@ -80,6 +83,21 @@ function MoneyRecoveryForm() {
           <h2 className="text-3xl font-bold text-center mb-8">Report Fraud</h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Case Title - Required field */}
+            <div>
+              <label htmlFor="title" className="block mb-1 font-medium">Case Title</label>
+              <input
+                id="title"
+                name="title"
+                type="text"
+                required
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="Brief title describing the fraud incident"
+                className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl"
+              />
+            </div>
+
             {/* User Information */}
             {[ 
               { id: "first_name", label: "First Name", type: "text" },
@@ -104,18 +122,19 @@ function MoneyRecoveryForm() {
             {/* Identity & Banking Details */}
             {[ 
               { id: "identification", label: "Identification (DNI/NIE/Passport)", type: "text" },
-              { id: "amount", label: "Amount Lost", type: "number" },
-              { id: "ref_number", label: "Reference Number / Transaction ID", type: "text" }, // Changed from reference_number
+              { id: "amount", label: "Amount Lost", type: "number", step: "0.01" },
+              { id: "ref_number", label: "Reference Number / Transaction ID", type: "text", required: false },
               { id: "bank", label: "Bank / Payment Platform", type: "text" },
               { id: "iban", label: "Bank Account / IBAN", type: "text" },
-            ].map(({ id, label, type }) => (
+            ].map(({ id, label, type, required = true, step }) => (
               <div key={id}>
                 <label htmlFor={id} className="block mb-1 font-medium">{label}</label>
                 <input
                   id={id}
                   name={id}
                   type={type}
-                  required={id !== 'ref_number'} // Changed from reference_number
+                  step={step}
+                  required={required}
                   value={formData[id]}
                   onChange={handleChange}
                   className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl"
@@ -137,16 +156,17 @@ function MoneyRecoveryForm() {
               />
             </div>
 
-            {/* Description */}
+            {/* Description - Fixed field name */}
             <div>
-              <label htmlFor="loss_description" className="block mb-1 font-medium">Description of Fraud</label>
+              <label htmlFor="description" className="block mb-1 font-medium">Description of Fraud</label>
               <textarea
-                id="loss_description"
-                name="loss_description"
+                id="description"
+                name="description"
                 rows="4"
                 required
-                value={formData.loss_description}
+                value={formData.description}
                 onChange={handleChange}
+                placeholder="Provide detailed information about the fraud incident..."
                 className="w-full p-3 bg-white/10 border border-white/20 text-white rounded-xl"
               ></textarea>
             </div>

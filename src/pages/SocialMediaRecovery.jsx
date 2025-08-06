@@ -6,13 +6,19 @@ import { redirectIfIncomplete } from "../utils/navigation";
 
 function SocialMediaRecoveryForm() {
   const [formData, setFormData] = useState({
+    // Required Case fields
+    title: '',
+    
+    // SocialMediaRecovery specific fields
     platform: "",
-    full_name: "", // Changed from fullName to match backend
+    full_name: "",
     email: "",
     phone: "",
     username: "",
-    profile_url: "", // Changed from profileUrl to match backend
-    profile_pic: null, // Changed from profilePic to match backend
+    profile_url: "",
+    profile_pic: null,
+    account_creation_date: '', // Added missing field
+    last_access_date: '', // Added missing field
   });
 
   const [submitting, setSubmitting] = useState(false);
@@ -24,7 +30,7 @@ function SocialMediaRecoveryForm() {
   
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "profile_pic") { // Changed from profilePic
+    if (name === "profile_pic") {
       setFormData({ ...formData, [name]: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -41,8 +47,6 @@ function SocialMediaRecoveryForm() {
       Object.entries(formData).forEach(([key, value]) => {
         if (value) data.append(key, value);
       });
-      
-      // Removed debug console.log and return statement
 
       const response = await authenticatedFetch(`${API_BASE_URL}/cases/social-media/`, {
         method: "POST",
@@ -74,6 +78,21 @@ function SocialMediaRecoveryForm() {
           <h2 className="text-3xl font-bold text-center mb-8">Social Media Account Recovery</h2>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Case Title - Required field */}
+            <div>
+              <label htmlFor="title" className="block mb-1 text-white font-medium">Case Title</label>
+              <input
+                id="title"
+                name="title"
+                type="text"
+                value={formData.title}
+                onChange={handleChange}
+                required
+                placeholder="Brief description of your account recovery request"
+                className="w-full p-3 rounded-xl bg-black/10 text-white border border-white/20"
+              />
+            </div>
+
             {/* Platform Dropdown */}
             <div>
               <label className="block mb-1 text-white font-medium">Platform</label>
@@ -106,7 +125,7 @@ function SocialMediaRecoveryForm() {
               </select>
             </div>
 
-            {/* Input Fields - Updated field names to match backend */}
+            {/* Input Fields */}
             {[
               { id: "full_name", label: "Full Name", type: "text", required: true },
               { id: "email", label: "Email Address", type: "email", required: true },
@@ -128,7 +147,36 @@ function SocialMediaRecoveryForm() {
               </div>
             ))}
 
-            {/* File Upload - Updated field name */}
+            {/* Account Dates - New fields */}
+            <div>
+              <label htmlFor="account_creation_date" className="block mb-1 text-white font-medium">
+                Account Creation Date (if known)
+              </label>
+              <input
+                id="account_creation_date"
+                name="account_creation_date"
+                type="date"
+                value={formData.account_creation_date}
+                onChange={handleChange}
+                className="w-full p-3 rounded-xl bg-black/10 text-white border border-white/20"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="last_access_date" className="block mb-1 text-white font-medium">
+                Last Access Date (if known)
+              </label>
+              <input
+                id="last_access_date"
+                name="last_access_date"
+                type="date"
+                value={formData.last_access_date}
+                onChange={handleChange}
+                className="w-full p-3 rounded-xl bg-black/10 text-white border border-white/20"
+              />
+            </div>
+
+            {/* File Upload */}
             <div>
               <label htmlFor="profile_pic" className="block mb-1 text-white font-medium">Upload Profile Picture</label>
               <input
