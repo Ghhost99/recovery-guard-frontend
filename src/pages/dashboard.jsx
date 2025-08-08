@@ -25,14 +25,15 @@ const Dashboard = () => {
       return;
     }
 
-    authenticatedFetch(`${API_BASE_URL}/auth/dashboard/`, {
+    authenticatedFetch(`${API_BASE_URL}/dashboard/`, {
       method: "POST", 
       credentials: "include",
     })
       .then((res) => res.json())
       .then((resData) => {
         console.log("Dashboard resData:", resData);
-        if (resData?.stats && resData?.progress && resData?.activity) {
+        // Updated validation for new data structure
+        if (resData?.stats && resData?.progress && Array.isArray(resData?.activity)) {
           setData(resData);
         } else {
           console.error("Invalid response structure", resData);
@@ -69,16 +70,23 @@ const Dashboard = () => {
       <div className="flex flex-col md:flex-row min-h-screen bg-black/30 text-white">
         <Sidebar />
         <div className="flex-1 flex flex-col">
-          <header className="flex items-center justify-between px-6 py-4 bg-black/30 border-b border-white/10 shadow-lg" />
+          <header className="flex items-center justify-between px-6 py-4 bg-black/30 border-b border-white/10 shadow-lg">
+            {/* Display user role if available */}
+            {data?.user_role && (
+              <div className="text-sm text-gray-300 capitalize">
+                Role: {data.user_role}
+              </div>
+            )}
+          </header>
 
           <main className="p-4 sm:p-6 space-y-6 overflow-y-auto">
             {/* Stats */}
             <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {data?.stats?.length ? (
-                data.stats.map((stat) => (
+                data.stats.map((stat, index) => (
                   <Link
-                    key={stat.label}
-                    to={`/${stat.label}`}
+                    key={`${stat.label}-${index}`}
+                    to={`/${stat.label.toLowerCase().replace(/\s+/g, '-')}`}
                     className="p-4 bg-black/30 rounded-xl border border-white/20 shadow-md backdrop-blur-lg hover:scale-[1.02] transition"
                   >
                     <p className="text-sm text-gray-300">{stat.label}</p>
@@ -89,6 +97,40 @@ const Dashboard = () => {
                 <p>No stats available.</p>
               )}
             </section>
+
+            {/* Summary Section - New */}
+            {data?.summary && (
+              <section className="bg-black/30 rounded-xl p-4 sm:p-6 border border-white/20 shadow backdrop-blur-lg">
+                <h2 className="text-xl font-semibold mb-4">Case Summary</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Case Types */}
+                  <div>
+                    <h3 className="text-lg font-medium mb-3">Case Types</h3>
+                    <div className="space-y-2">
+                      {Object.entries(data.summary.case_types).map(([type, count]) => (
+                        <div key={type} className="flex justify-between text-sm">
+                          <span className="capitalize">{type.replace('_', ' ')}</span>
+                          <span className="font-semibold">{count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Status Breakdown */}
+                  <div>
+                    <h3 className="text-lg font-medium mb-3">Status Breakdown</h3>
+                    <div className="space-y-2">
+                      {Object.entries(data.summary.status_breakdown).map(([status, count]) => (
+                        <div key={status} className="flex justify-between text-sm">
+                          <span className="capitalize">{status.replace('_', ' ')}</span>
+                          <span className="font-semibold">{count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
 
             {/* Progress */}
             <section className="bg-black/30 rounded-xl p-4 sm:p-6 border border-white/20 shadow backdrop-blur-lg">
@@ -105,7 +147,7 @@ const Dashboard = () => {
                               : "bg-gray-500"
                           }`}
                         />
-                        <span className="mt-2 text-center">{step}</span>
+                        <span className="mt-2 text-center text-xs">{step}</span>
                       </div>
                     ))}
                   </div>
@@ -125,6 +167,9 @@ const Dashboard = () => {
                       aria-valuemax={data.progress.steps.length}
                     />
                   </div>
+                  <div className="mt-2 text-sm text-gray-400 text-center">
+                    Step {data.progress.currentStepIndex + 1} of {data.progress.steps.length}
+                  </div>
                 </>
               ) : (
                 <p>No progress data available.</p>
@@ -137,17 +182,27 @@ const Dashboard = () => {
               {data?.activity?.length ? (
                 <ul className="space-y-3 text-sm">
                   {data.activity.map((item, i) => (
-                    <li key={i}>
-                      {item.icon} {item.message}
-                      {item.detail && <b> {item.detail}</b>}{" "}
-                      <span className="text-xs text-gray-400">
-                        ({item.time})
-                      </span>
+                    <li key={i} className="flex items-start space-x-2">
+                      {item.icon && <span className="mt-0.5">{item.icon}</span>}
+                      <div className="flex-1">
+                        <span>{item.message}</span>
+                        {item.detail && <span className="font-semibold"> {item.detail}</span>}
+                        {item.time && (
+                          <span className="text-xs text-gray-400 ml-2">
+                            ({item.time})
+                          </span>
+                        )}
+                      </div>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p>No recent activity.</p>
+                <div className="text-center py-8">
+                  <p className="text-gray-400">No recent activity.</p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Activities will appear here once you start creating cases.
+                  </p>
+                </div>
               )}
             </section>
 
@@ -158,10 +213,16 @@ const Dashboard = () => {
                 to="/upload"
                 className="block border-2 border-dashed border-gray-500 p-6 sm:p-10 rounded-lg text-center hover:border-blue-400 transition cursor-pointer"
               >
-                <p className="mb-2">Drag & Drop files here</p>
-                <p className="text-sm text-gray-400">
-                  Allowed formats: PDF, JPG, PNG
-                </p>
+                <div className="space-y-2">
+                  <div className="text-4xl">📁</div>
+                  <p className="mb-2">Drag & Drop files here</p>
+                  <p className="text-sm text-gray-400">
+                    Allowed formats: PDF, JPG, PNG
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Click to browse files
+                  </p>
+                </div>
               </Link>
             </section>
           </main>
